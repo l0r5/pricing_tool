@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:pricing_tool/elements/pricing_parameter.dart';
+import 'package:pricing_tool/elements/parameter_input_field.dart';
+import 'package:pricing_tool/elements/parameter_slider.dart';
 
 void main() => runApp(MyApp());
 
@@ -39,27 +40,46 @@ class _MyHomePageState extends State<MyHomePage> {
     0: {
       "id": 0,
       "name": "Ticket Price",
-      "value": 0,
+      "value": 0.00,
+      "numberOfDecimals": 2,
+      "min": 0,
+      "max": 200,
+      "divisions": 2000
     },
     1: {
       "id": 1,
       "name": "Premium",
-      "value": 0,
+      "numberOfDecimals": 2,
+      "value": 0.00,
+      "min": 0,
+      "max": 200,
+      "divisions": 2000
     },
     2: {
       "id": 2,
       "name": "Payout",
-      "value": 0,
+      "numberOfDecimals": 2,
+      "value": 0.00,
+      "min": 0,
+      "max": 200,
+      "divisions": 2000
     },
     3: {
       "id": 3,
       "name": "Delay",
+      "numberOfDecimals": 0,
       "value": 0,
+      "min": 0,
+      "max": 1000,
+      "divisions": 500
     },
   };
 
-  Function() updateValues(int paramId, String value) {
-    _params[paramId]["value"] = double.parse(value);
+  void updateValue(int paramId, double value) {
+    setState(() {
+      _params[paramId]["value"] = double.parse(
+          value.toStringAsFixed(_params[paramId]["numberOfDecimals"]));
+    });
   }
 
   List<Widget> _constructAllParamWidgets() {
@@ -70,14 +90,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildParamWidget(int paramId) {
-    return Row(children: <Widget>[
-      PricingParameter(
-        label: _params[paramId]["name"].toString(),
-        paramId: _params[paramId]["id"],
-        initialValue: _params[paramId]["value"],
-        updateValues: updateValues,
-      )
-    ]);
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        ParameterInputField(
+          paramId: _params[paramId]["id"],
+          label: _params[paramId]["name"],
+          value: _params[paramId]["value"],
+          updateValue: updateValue,
+        ),
+        ParameterSlider(
+          paramId: _params[paramId]["id"],
+          label: _params[paramId]["name"],
+          value: _params[paramId]["value"],
+          min: _params[paramId]["min"],
+          max: _params[paramId]["max"],
+          divisions: _params[paramId]["divisions"],
+          updateValue: updateValue,
+        )
+      ],
+    );
   }
 
   @override
@@ -97,7 +130,7 @@ class _MyHomePageState extends State<MyHomePage> {
         margin: EdgeInsets.symmetric(horizontal: 100, vertical: 100),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
         child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: _constructAllParamWidgets()),
       ),
     );
