@@ -48,7 +48,7 @@ class _MyHomePageState extends State<MyHomePage> {
     },
     1: {
       "id": 1,
-      "name": "Premium",
+      "name": "Premium Amount",
       "numberOfDecimals": 2,
       "value": 0.00,
       "min": 0,
@@ -57,15 +57,33 @@ class _MyHomePageState extends State<MyHomePage> {
     },
     2: {
       "id": 2,
-      "name": "Payout",
+      "name": "Number of collected Premiums",
+      "numberOfDecimals": 2,
+      "value": 0,
+      "min": 0,
+      "max": 1000000,
+      "divisions": 1000000
+    },
+    3: {
+      "id": 3,
+      "name": "Payout Amount",
       "numberOfDecimals": 2,
       "value": 0.00,
       "min": 0,
       "max": 200,
       "divisions": 2000
     },
-    3: {
-      "id": 3,
+    4: {
+      "id": 4,
+      "name": "Payout Number",
+      "numberOfDecimals": 2,
+      "value": 0.00,
+      "min": 0,
+      "max": 1000000,
+      "divisions": 1000000
+    },
+    5: {
+      "id": 5,
       "name": "Delay",
       "numberOfDecimals": 0,
       "value": 0,
@@ -77,8 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void updateValue(int paramId, double value) {
     setState(() {
-      _params[paramId]["value"] = double.parse(
-          value.toStringAsFixed(_params[paramId]["numberOfDecimals"]));
+      _params[paramId]["value"] = value;
     });
   }
 
@@ -92,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildParamWidget(int paramId) {
     return Row(
       mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
         ParameterInputField(
           paramId: _params[paramId]["id"],
@@ -116,23 +133,43 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Container(
-        height: 400,
-        decoration: BoxDecoration(
-          border: Border.all(width: 1.0, color: Colors.grey),
-          borderRadius: BorderRadius.all(
-            Radius.circular(15),
-          ),
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-        margin: EdgeInsets.symmetric(horizontal: 100, vertical: 100),
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-        child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: _constructAllParamWidgets()),
-      ),
-    );
+        body: ListView(
+            shrinkWrap: true,
+            padding: EdgeInsets.all(15.0),
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1.0, color: Colors.grey),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                    ),
+                    margin:
+                    EdgeInsets.symmetric(horizontal: 50, vertical: 25),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 1.0, color: Colors.grey),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15),
+                      ),
+                    ),
+                    margin:
+                        EdgeInsets.symmetric(horizontal: 50, vertical: 0),
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: _constructAllParamWidgets()),
+                  ),
+                ],
+              )
+            ]));
   }
 }

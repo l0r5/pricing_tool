@@ -39,7 +39,6 @@ class ParameterSlider extends StatelessWidget {
         Text("$min"),
         Container(
           width: 400,
-          margin: EdgeInsets.symmetric(horizontal: 20),
           child: Slider(
             label: "$label: $value",
             activeColor: Colors.blue,
