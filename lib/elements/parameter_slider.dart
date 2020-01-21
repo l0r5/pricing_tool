@@ -34,11 +34,18 @@ class ParameterSlider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+        width: 260,
         child: Row(
       children: <Widget>[
-        Text("$min"),
+        Text(
+          "$min",
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 10,
+          ),
+        ),
         Container(
-          width: 400,
+          width: 200,
           child: Slider(
             label: "$label: $value",
             activeColor: Colors.blue,
@@ -49,7 +56,11 @@ class ParameterSlider extends StatelessWidget {
             value: value,
           ),
         ),
-        Text("$max"),
+        Text((max < 10000) ? "$max" : (max < 1000000) ? "${max/1000} k" : "${max/1000000} mio",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 10,
+            ))
       ],
     ));
   }

@@ -30,7 +30,7 @@ class ParameterInputField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 300,
+      width: 220,
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
           controller: _textFieldController,
