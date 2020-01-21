@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
 import 'package:pricing_tool/elements/parameter_input_field.dart';
 import 'package:pricing_tool/elements/parameter_slider.dart';
-import 'package:pricing_tool/elements/premium_payout_ratio.dart';
+import 'package:pricing_tool/views/total_numbers_circle_view.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,7 +35,7 @@ class MyHomePage extends StatefulWidget {
   static const int PARAM_ID_TICKET_PRICE = 0;
   static const int PARAM_ID_PREMIUM_SHARE = 1;
   static const int PARAM_ID_PREMIUM_PRICE = 2;
-  static const int PARAM_ID_NUMBER_PREMIUMS = 3;
+  static const int PARAM_ID_PREMIUM_NUMBER = 3;
   static const int PARAM_ID_DELAY = 4;
   static const int PARAM_ID_PAYOUT_SHARE = 5;
   static const int PARAM_ID_PAYOUT_AMOUNT = 6;
@@ -75,13 +75,13 @@ class _MyHomePageState extends State<MyHomePage> {
       "max": 100,
       "divisions": 10000
     },
-    MyHomePage.PARAM_ID_NUMBER_PREMIUMS: {
+    MyHomePage.PARAM_ID_PREMIUM_NUMBER: {
       "id": 3,
       "name": "Number of collected Premiums",
       "value": 0,
       "min": 0,
-      "max": 1000000,
-      "divisions": 1000000
+      "max": 100000,
+      "divisions": 100000
     },
     MyHomePage.PARAM_ID_DELAY: {
       "id": 4,
@@ -112,35 +112,32 @@ class _MyHomePageState extends State<MyHomePage> {
       "name": "Payout Number",
       "value": 0.00,
       "min": 0,
-      "max": 1000000,
-      "divisions": 1000000
+      "max": 100000,
+      "divisions": 100000
     },
   };
+
+  double _totalPremiumAmount = 0.00;
+  double _totalPremiumRatio = 0.00;
+  double _totalPayoutAmount = 0.00;
+  double _totalPayoutRatio = 0.00;
 
   void updateValue(int paramId, double value) {
     if (_params[paramId]["value"] != value) {
       setState(() {
         _params[paramId]["value"] = value;
         _adjustDependedParameters(paramId);
+        _calcKeyFigures();
       });
     }
   }
 
-//  PARAM_ID_TICKET_PRICE = 0;
-//  PARAM_ID_PREMIUM_SHARE = 1;
-//  PARAM_ID_PREMIUM_PRICE = 2;
-//  PARAM_ID_NUMBER_PREMIUMS =
-//  PARAM_ID_DELAY = 4;
-//  PARAM_ID_PAYOUT_SHARE = 5;
-//  PARAM_ID_PAYOUT_AMOUNT = 6;
-//  PARAM_ID_PAYOUT_NUMBER = 7;
-
   void _adjustDependedParameters(int paramId) {
-    double ticketPrice = _params[MyHomePage.PARAM_ID_TICKET_PRICE]["value"];
-    double premiumPrice = _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]["value"];
-    double premiumShare = _params[MyHomePage.PARAM_ID_PREMIUM_SHARE]["value"];
-    double payoutAmount = _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]["value"];
-    double payoutShare = _params[MyHomePage.PARAM_ID_PAYOUT_SHARE]["value"];
+    var ticketPrice = _params[MyHomePage.PARAM_ID_TICKET_PRICE]["value"];
+    var premiumPrice = _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]["value"];
+    var premiumShare = _params[MyHomePage.PARAM_ID_PREMIUM_SHARE]["value"];
+    var payoutAmount = _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]["value"];
+    var payoutShare = _params[MyHomePage.PARAM_ID_PAYOUT_SHARE]["value"];
 
     switch (paramId) {
       case MyHomePage.PARAM_ID_TICKET_PRICE:
@@ -152,7 +149,7 @@ class _MyHomePageState extends State<MyHomePage> {
       case MyHomePage.PARAM_ID_PREMIUM_SHARE:
         if (ticketPrice > 0 && premiumShare > 0) {
           _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]["value"] =
-              ticketPrice * (premiumShare/100);
+              ticketPrice * (premiumShare / 100);
         }
         break;
       case MyHomePage.PARAM_ID_PREMIUM_PRICE:
@@ -161,10 +158,18 @@ class _MyHomePageState extends State<MyHomePage> {
               (premiumPrice / ticketPrice) * 100;
         }
         break;
+      case MyHomePage.PARAM_ID_PREMIUM_NUMBER:
+        _params[MyHomePage.PARAM_ID_PREMIUM_NUMBER]["value"] =
+            _params[MyHomePage.PARAM_ID_PREMIUM_NUMBER]["value"] as int;
+        break;
+      case MyHomePage.PARAM_ID_DELAY:
+        _params[MyHomePage.PARAM_ID_DELAY]["value"] =
+            _params[MyHomePage.PARAM_ID_DELAY]["value"] as int;
+        break;
       case MyHomePage.PARAM_ID_PAYOUT_SHARE:
         if (ticketPrice > 0 && payoutShare > 0) {
           _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]["value"] =
-              ticketPrice * (payoutShare/100);
+              ticketPrice * (payoutShare / 100);
         }
         break;
       case MyHomePage.PARAM_ID_PAYOUT_AMOUNT:
@@ -173,9 +178,42 @@ class _MyHomePageState extends State<MyHomePage> {
               (payoutAmount / ticketPrice) * 100;
         }
         break;
+      case MyHomePage.PARAM_ID_PAYOUT_NUMBER:
+        _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"] =
+            _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"] as int;
+        break;
       default:
         break;
     }
+  }
+
+  void _calcKeyFigures() {
+    _calcTotalPremiumAmount();
+    _calcTotalPayoutAmount();
+    _calcTotalPremiumRatio();
+    _calcTotalPayoutRatio();
+  }
+
+  void _calcTotalPremiumAmount() {
+    var premiumPrice = _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]["value"];
+    var premiumNumber = _params[MyHomePage.PARAM_ID_PREMIUM_NUMBER]["value"];
+    _totalPremiumAmount = premiumPrice * premiumNumber;
+  }
+
+  void _calcTotalPayoutAmount() {
+    var payoutAmount = _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]["value"];
+    var payoutNumber = _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"];
+    _totalPayoutAmount = payoutAmount * payoutNumber;
+  }
+
+  void _calcTotalPremiumRatio() {
+    _totalPremiumRatio =
+        _totalPremiumAmount / (_totalPremiumAmount + _totalPayoutAmount);
+  }
+
+  void _calcTotalPayoutRatio() {
+    _totalPayoutRatio =
+        _totalPayoutAmount / (_totalPremiumAmount + _totalPayoutAmount);
   }
 
   List<Widget> _constructParamWidgets(int start, int end) {
@@ -183,8 +221,6 @@ class _MyHomePageState extends State<MyHomePage> {
     for (; start <= end; start++) {
       collectedParamWidgets.add(_buildParamWidget(start));
     }
-//    _params
-//        .forEach((key, value) => collectedParamWidgets.add(_buildParamWidget(key)));
     return collectedParamWidgets;
   }
 
@@ -218,51 +254,57 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           title: Text(widget.title),
         ),
-        body: ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.all(15.0),
-            children: <Widget>[
-              Column(
+        body: Container(
+            color: Color.fromRGBO(245, 248, 251, 1.0),
+            child: ListView(
+                shrinkWrap: true,
+                padding: EdgeInsets.all(15.0),
                 children: <Widget>[
-                  Container(
-                    height: 400,
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 1.0, color: Colors.grey),
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(15),
-                      ),
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: 50, vertical: 25),
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-//                    child: PremiumPayoutRatio(
-//                      premiumAmount:  _params[1]["value"],
-//                      premiumNumber: _params[2]["value"],
-//                      payoutAmount: _params[3]["value"],
-//                      payoutNumber: _params[4]["value"],
-//                    ),
-                  ),
-                  Container(
-                      decoration: BoxDecoration(
-                        border: Border.all(width: 1.0, color: Colors.grey),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(15),
+                  Column(
+                    children: <Widget>[
+                      Container(
+                        child: Card(
+                          elevation: 1,
+                          child: TotalNumbersCircleView(
+                            labels: [
+                              "Total Premium Amount",
+                            ],
+                            totalParameterAmount: _totalPremiumAmount,
+                            pieChartData: {
+                              (_params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
+                                      ["name"]):
+                                  _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
+                                      ["value"],
+                              _params[MyHomePage.PARAM_ID_TICKET_PRICE]["name"]:
+                              (_params[MyHomePage.PARAM_ID_TICKET_PRICE]["value"] <=0 || _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]["value"] <= 0) ? 1 : _params[MyHomePage.PARAM_ID_TICKET_PRICE]["value"] - _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
+                              ["value"]
+                            },
+                            colorSet: [Color.fromRGBO(117, 104, 232, 1.0), Color.fromRGBO(139, 210, 127, 1.0)],
+                          ),
                         ),
                       ),
-                      margin: EdgeInsets.symmetric(horizontal: 50, vertical: 0),
-                      padding: EdgeInsets.symmetric(vertical: 25),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: _constructParamWidgets(0, 3)),
-                          Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: _constructParamWidgets(4, 7)),
-                        ],
-                      ))
-                ],
-              )
-            ]));
+                      Container(
+                          height: 300,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 50, vertical: 10),
+                          child: Card(
+                              elevation: 1,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: _constructParamWidgets(0, 3)),
+                                  Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: _constructParamWidgets(4, 7)),
+                                ],
+                              )))
+                    ],
+                  )
+                ])));
   }
 }
