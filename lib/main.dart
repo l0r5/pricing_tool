@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pricing_tool/elements/parameter_input_field.dart';
 import 'package:pricing_tool/elements/parameter_slider.dart';
+import 'package:pricing_tool/elements/premium_payout_ratio.dart';
 
 void main() => runApp(MyApp());
 
@@ -44,7 +45,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "numberOfDecimals": 2,
       "min": 0,
       "max": 200,
-      "divisions": 2000
+      "divisions": 20000
     },
     1: {
       "id": 1,
@@ -53,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "value": 0.00,
       "min": 0,
       "max": 200,
-      "divisions": 2000
+      "divisions": 20000
     },
     2: {
       "id": 2,
@@ -71,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "value": 0.00,
       "min": 0,
       "max": 200,
-      "divisions": 2000
+      "divisions": 20000
     },
     4: {
       "id": 4,
@@ -91,12 +92,23 @@ class _MyHomePageState extends State<MyHomePage> {
       "max": 1000,
       "divisions": 500
     },
+    6: {
+      "id": 6,
+      "name": "Percentage of Ticket Price",
+      "numberOfDecimals": 0,
+      "value": 0,
+      "min": 0,
+      "max": 100,
+      "divisions": 10000
+    },
   };
 
   void updateValue(int paramId, double value) {
-    setState(() {
-      _params[paramId]["value"] = value;
-    });
+    if(_params[paramId]["value"] != value) {
+      setState(() {
+        _params[paramId]["value"] = value;
+      });
+    }
   }
 
   List<Widget> _constructAllParamWidgets() {
@@ -143,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Column(
                 children: <Widget>[
                   Container(
-                    height: 200,
+                    height: 400,
                     decoration: BoxDecoration(
                       border: Border.all(width: 1.0, color: Colors.grey),
                       borderRadius: BorderRadius.all(
@@ -153,6 +165,12 @@ class _MyHomePageState extends State<MyHomePage> {
                     margin:
                     EdgeInsets.symmetric(horizontal: 50, vertical: 25),
                     padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+//                    child: PremiumPayoutRatio(
+//                      premiumAmount:  _params[1]["value"],
+//                      premiumNumber: _params[2]["value"],
+//                      payoutAmount: _params[3]["value"],
+//                      payoutNumber: _params[4]["value"],
+//                    ),
                   ),
                   Container(
                     decoration: BoxDecoration(
