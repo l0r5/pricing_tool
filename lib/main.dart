@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:pricing_tool/elements/parameter_input_field.dart';
 import 'package:pricing_tool/elements/parameter_slider.dart';
 import 'package:pricing_tool/elements/premium_payout_ratio.dart';
@@ -30,6 +31,16 @@ class MyApp extends StatelessWidget {
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
+
+  static const int PARAM_ID_TICKET_PRICE = 0;
+  static const int PARAM_ID_PREMIUM_SHARE = 1;
+  static const int PARAM_ID_PREMIUM_PRICE = 2;
+  static const int PARAM_ID_NUMBER_PREMIUMS = 3;
+  static const int PARAM_ID_DELAY = 4;
+  static const int PARAM_ID_PAYOUT_SHARE = 5;
+  static const int PARAM_ID_PAYOUT_AMOUNT = 6;
+  static const int PARAM_ID_PAYOUT_NUMBER = 7;
+
   final String title;
 
   @override
@@ -37,16 +48,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Logger logger = Logger();
+
   Map _params = {
-    0: {
+    MyHomePage.PARAM_ID_TICKET_PRICE: {
       "id": 0,
       "name": "Ticket Price",
       "value": 0.00,
       "min": 0,
-      "max": 200,
-      "divisions": 20000
+      "max": 100,
+      "divisions": 10000
     },
-    1: {
+    MyHomePage.PARAM_ID_PREMIUM_SHARE: {
       "id": 1,
       "name": "Premium Share of Ticket Price",
       "value": 0,
@@ -54,15 +67,15 @@ class _MyHomePageState extends State<MyHomePage> {
       "max": 100,
       "divisions": 10000
     },
-    2: {
+    MyHomePage.PARAM_ID_PREMIUM_PRICE: {
       "id": 2,
-      "name": "Premium Amount",
+      "name": "Premium Price",
       "value": 0.00,
       "min": 0,
-      "max": 200,
-      "divisions": 20000
+      "max": 100,
+      "divisions": 10000
     },
-    3: {
+    MyHomePage.PARAM_ID_NUMBER_PREMIUMS: {
       "id": 3,
       "name": "Number of collected Premiums",
       "value": 0,
@@ -70,7 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "max": 1000000,
       "divisions": 1000000
     },
-    4: {
+    MyHomePage.PARAM_ID_DELAY: {
       "id": 4,
       "name": "Delay",
       "value": 0,
@@ -78,7 +91,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "max": 120,
       "divisions": 120
     },
-    5: {
+    MyHomePage.PARAM_ID_PAYOUT_SHARE: {
       "id": 5,
       "name": "Payout Share of Ticket Price",
       "value": 0,
@@ -86,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "max": 100,
       "divisions": 10000
     },
-    6: {
+    MyHomePage.PARAM_ID_PAYOUT_AMOUNT: {
       "id": 6,
       "name": "Payout Amount",
       "value": 0.00,
@@ -94,7 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
       "max": 200,
       "divisions": 20000
     },
-    7: {
+    MyHomePage.PARAM_ID_PAYOUT_NUMBER: {
       "id": 7,
       "name": "Payout Number",
       "value": 0.00,
@@ -108,7 +121,60 @@ class _MyHomePageState extends State<MyHomePage> {
     if (_params[paramId]["value"] != value) {
       setState(() {
         _params[paramId]["value"] = value;
+        _adjustDependedParameters(paramId);
       });
+    }
+  }
+
+//  PARAM_ID_TICKET_PRICE = 0;
+//  PARAM_ID_PREMIUM_SHARE = 1;
+//  PARAM_ID_PREMIUM_PRICE = 2;
+//  PARAM_ID_NUMBER_PREMIUMS =
+//  PARAM_ID_DELAY = 4;
+//  PARAM_ID_PAYOUT_SHARE = 5;
+//  PARAM_ID_PAYOUT_AMOUNT = 6;
+//  PARAM_ID_PAYOUT_NUMBER = 7;
+
+  void _adjustDependedParameters(int paramId) {
+    double ticketPrice = _params[MyHomePage.PARAM_ID_TICKET_PRICE]["value"];
+    double premiumPrice = _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]["value"];
+    double premiumShare = _params[MyHomePage.PARAM_ID_PREMIUM_SHARE]["value"];
+    double payoutAmount = _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]["value"];
+    double payoutShare = _params[MyHomePage.PARAM_ID_PAYOUT_SHARE]["value"];
+
+    switch (paramId) {
+      case MyHomePage.PARAM_ID_TICKET_PRICE:
+        if (ticketPrice > 0 && premiumPrice > 0) {
+          _params[MyHomePage.PARAM_ID_PREMIUM_SHARE]["value"] =
+              (premiumPrice / ticketPrice) * 100;
+        }
+        break;
+      case MyHomePage.PARAM_ID_PREMIUM_SHARE:
+        if (ticketPrice > 0 && premiumShare > 0) {
+          _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]["value"] =
+              ticketPrice * (premiumShare/100);
+        }
+        break;
+      case MyHomePage.PARAM_ID_PREMIUM_PRICE:
+        if (ticketPrice > 0 && premiumPrice > 0) {
+          _params[MyHomePage.PARAM_ID_PREMIUM_SHARE]["value"] =
+              (premiumPrice / ticketPrice) * 100;
+        }
+        break;
+      case MyHomePage.PARAM_ID_PAYOUT_SHARE:
+        if (ticketPrice > 0 && payoutShare > 0) {
+          _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]["value"] =
+              ticketPrice * (payoutShare/100);
+        }
+        break;
+      case MyHomePage.PARAM_ID_PAYOUT_AMOUNT:
+        if (ticketPrice > 0 && payoutAmount > 0) {
+          _params[MyHomePage.PARAM_ID_PAYOUT_SHARE]["value"] =
+              (payoutAmount / ticketPrice) * 100;
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -183,19 +249,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ),
                       margin: EdgeInsets.symmetric(horizontal: 50, vertical: 0),
-                      padding:
-                          EdgeInsets.symmetric(vertical: 25),
+                      padding: EdgeInsets.symmetric(vertical: 25),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: _constructParamWidgets(0, 3)
-                          ),
+                              children: _constructParamWidgets(0, 3)),
                           Column(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: _constructParamWidgets(4, 7)
-                          ),
+                              children: _constructParamWidgets(4, 7)),
                         ],
                       ))
                 ],
