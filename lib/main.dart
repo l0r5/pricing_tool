@@ -166,11 +166,11 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case MyHomePage.PARAM_ID_PREMIUM_NUMBER:
         _params[MyHomePage.PARAM_ID_PREMIUM_NUMBER]["value"] =
-            _params[MyHomePage.PARAM_ID_PREMIUM_NUMBER]["value"] as int;
+            _params[MyHomePage.PARAM_ID_PREMIUM_NUMBER]["value"].round();
         break;
       case MyHomePage.PARAM_ID_DELAY:
         _params[MyHomePage.PARAM_ID_DELAY]["value"] =
-            _params[MyHomePage.PARAM_ID_DELAY]["value"] as int;
+            _params[MyHomePage.PARAM_ID_DELAY]["value"].round();
         break;
       case MyHomePage.PARAM_ID_PAYOUT_SHARE:
         if (ticketPrice > 0 && payoutShare > 0) {
@@ -186,7 +186,7 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case MyHomePage.PARAM_ID_PAYOUT_NUMBER:
         _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"] =
-            _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"] as int;
+            _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"].round();
         break;
       default:
         break;
@@ -349,14 +349,16 @@ class _MyHomePageState extends State<MyHomePage> {
                               child: FormattedCard(
                                 child: PremiumPayoutRatioView(labels: [
                                   "Premium Ratio",
-                                  "${(totalPremiumRatio * 100) > 0 ? (totalPremiumRatio * 100).toStringAsFixed(2) : "0.00"}",
+                                  "${(totalPremiumRatio * 100) > 0 ? ((totalPremiumRatio * 100) <= 100 ? (totalPremiumRatio * 100).round() : 100) : 0}",
                                   "Payout Ratio",
-                                  "${(totalPayoutRatio * 100) > 0 ? (totalPayoutRatio * 100).toStringAsFixed(2) : "0.00"}"
+                                  "${(totalPayoutRatio * 100) > 0 ? ((totalPayoutRatio * 100) <= 100 ? (totalPayoutRatio * 100).round() : 100) : 0}"
                                 ], pieChartData: {
-                                  "Premiums": totalPremiumRatio * 100,
+                                  "Premiums": totalPremiumRatio > 0
+                                      ? (totalPremiumRatio * 100).round()
+                                      : 1,
                                   "Payouts": totalPayoutRatio > 0
-                                      ? totalPayoutRatio * 100
-                                       : 1
+                                      ? (totalPayoutRatio * 100).round()
+                                      : 1
                                 }, colorSet: [
                                   ColorThemes.accentColor2,
                                   ColorThemes.accentColor5,
