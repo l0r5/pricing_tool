@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:pricing_tool/Themes/color_themes.dart';
 
 class PremiumPayoutRatioView extends StatelessWidget {
   final List<String> labels;
@@ -14,17 +15,43 @@ class PremiumPayoutRatioView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: 300,
-        width: 600,
+        height: 350,
+        width: 800,
+        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Container(
-                  child: Text("Revenue"),
-                )
-              ],
+            Container(
+              margin: EdgeInsets.fromLTRB(80, 0, 0, 0),
+              width: 250,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Text(
+                    "${revenue.toStringAsFixed(2)} CHF",
+                    style: TextStyle(
+                        color: (revenue < 0)
+                            ? ColorThemes.accentColor9
+                            : (revenue > 0)
+                                ? ColorThemes.accentColor4
+                                : Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    "Revenue",
+                    style: TextStyle(
+                        color: (revenue < 0)
+                            ? ColorThemes.accentColor9
+                            : (revenue > 0)
+                                ? ColorThemes.accentColor4
+                                : Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold),
+                  )
+                ],
+              ),
             ),
             Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -32,7 +59,6 @@ class PremiumPayoutRatioView extends StatelessWidget {
                 children: <Widget>[
                   Container(
                     width: 170,
-                    margin: EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: Column(children: <Widget>[
                       Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -89,7 +115,7 @@ class PremiumPayoutRatioView extends StatelessWidget {
                     ]),
                   ),
                   Container(
-                    width: 200,
+                    width: 230,
                     child: PieChart(
                       dataMap: pieChartData,
                       animationDuration: Duration(milliseconds: 800),
