@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pricing_tool/Themes/color_themes.dart';
 
 class ParameterSlider extends StatelessWidget {
   ParameterSlider({paramId, label, value, min, max, divisions, updateValue}) {
@@ -48,7 +49,7 @@ class ParameterSlider extends StatelessWidget {
           width: 200,
           child: Slider(
             label: "$label: $value",
-            activeColor: Colors.blue,
+            activeColor: ColorThemes.accentColor,
             min: min,
             max: max,
             divisions: divisions,

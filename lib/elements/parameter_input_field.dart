@@ -34,7 +34,7 @@ class ParameterInputField extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
           controller: _textFieldController,
-          decoration: InputDecoration(labelText: label),
+          decoration: InputDecoration(labelText: label, labelStyle: TextStyle(color: Theme.of(context).accentColor)),
           keyboardType: TextInputType.numberWithOptions(decimal: true),
           onSubmitted: (newValue) => _updateField(newValue),
           onTap: (_textFieldController.text == "0") ? _resetField : null),

@@ -9,7 +9,10 @@ class TotalNumbersCircleView extends StatelessWidget {
   final List<Color> colorSet;
 
   TotalNumbersCircleView(
-      {this.labels, this.totalParameterAmount, this.pieChartData, this.colorSet}) {
+      {this.labels,
+      this.totalParameterAmount,
+      this.pieChartData,
+      this.colorSet}) {
 //    _pieChartData = {"${labels[0]}": parameterAmount, "Ticket Price": ticketPrice};
   }
 
