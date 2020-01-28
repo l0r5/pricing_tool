@@ -19,13 +19,13 @@ class TotalNumbersCircleView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 200,
+      width: 400,
       height: 300,
-      child: Column(
+      padding: EdgeInsets.all(20),
+      child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
             Container(
-              margin: EdgeInsets.fromLTRB(0, 20, 0, 5),
               child: PieChart(
                 dataMap: pieChartData,
                 animationDuration: Duration(milliseconds: 800),

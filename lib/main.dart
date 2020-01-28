@@ -131,7 +131,7 @@ class _MyHomePageState extends State<MyHomePage> {
   double revenue = 0.00;
   Map _historicalDelayData;
 
-  double parameterBarWidth = 400;
+  double parameterBarWidth = 370;
 
   @override
   void initState() {
@@ -263,25 +263,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Widget _buildParamWidget(int paramId) {
     return Container(
-        margin: EdgeInsets.all(5),
-        padding: EdgeInsets.all(15),
-        color: ColorThemes.accentColor10,
+        margin: EdgeInsets.fromLTRB(0,0,5,0),
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(15.0)),
+          color: ColorThemes.accentColor10,
+        ),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            ParameterInputField(
-              paramId: _params[paramId]["id"],
-              label: _params[paramId]["name"],
-              value: _params[paramId]["value"],
-              updateValue: updateValue,
+            Container(
+              child: Text(
+                _params[paramId]["name"],
+                style: TextStyle(color: Colors.white, fontSize: 12),
+              ),
             ),
-            ParameterSlider(
-              paramId: _params[paramId]["id"],
-              label: _params[paramId]["name"],
-              value: _params[paramId]["value"],
-              min: _params[paramId]["min"],
-              max: _params[paramId]["max"],
-              divisions: _params[paramId]["divisions"],
-              updateValue: updateValue,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                ParameterSlider(
+                  paramId: _params[paramId]["id"],
+                  label: _params[paramId]["name"],
+                  value: _params[paramId]["value"],
+                  min: _params[paramId]["min"],
+                  max: _params[paramId]["max"],
+                  divisions: _params[paramId]["divisions"],
+                  updateValue: updateValue,
+                ),
+                ParameterInputField(
+                  paramId: _params[paramId]["id"],
+                  label: _params[paramId]["name"],
+                  value: _params[paramId]["value"],
+                  updateValue: updateValue,
+                ),
+              ],
             )
           ],
         ));
@@ -294,9 +309,6 @@ class _MyHomePageState extends State<MyHomePage> {
 //        title: Text(widget.title),
 //      ),
         body: Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         ParameterBarView(
           paramWidgets: _constructParamWidgets(0, _params.length - 1),
@@ -339,8 +351,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       ],
                     ),
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
                         Container(
+                          margin: EdgeInsets.symmetric(vertical: 15),
                           child: FormattedCard(
                             child: TotalNumbersCircleView(
                               labels: [

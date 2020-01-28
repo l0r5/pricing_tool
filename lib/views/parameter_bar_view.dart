@@ -11,16 +11,14 @@ class ParameterBarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        width: width,
-        height: MediaQuery.of(context).size.height,
-        color: ColorThemes.primaryColor,
-        child: ListView(
-            shrinkWrap: true,
-            padding: EdgeInsets.all(15.0),
-            children: <Widget>[
-              Column(
-                children: paramWidgets,
-              ),
-            ]));
+      width: width,
+      height: MediaQuery.of(context).size.height,
+      color: ColorThemes.primaryColor,
+      padding: EdgeInsets.fromLTRB(5,5,5,5),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: paramWidgets,
+      ),
+    );
   }
 }

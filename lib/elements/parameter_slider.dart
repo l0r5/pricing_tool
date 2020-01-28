@@ -50,7 +50,7 @@ class ParameterSlider extends StatelessWidget {
           child: Slider(
             label: "$label: $value",
             activeColor: ColorThemes.accentColor9,
-            inactiveColor: ColorThemes.accentColor6,
+            inactiveColor: ColorThemes.accentColor4,
             min: min,
             max: max,
             divisions: divisions,

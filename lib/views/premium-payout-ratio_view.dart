@@ -16,8 +16,8 @@ class PremiumPayoutRatioView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         height: 350,
-        width: 800,
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+        width: 1000,
+        padding: EdgeInsets.all(25),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: <Widget>[
@@ -115,7 +115,8 @@ class PremiumPayoutRatioView extends StatelessWidget {
                     ]),
                   ),
                   Container(
-                    width: 230,
+                    width: 200,
+                    margin: EdgeInsets.fromLTRB(0, 0, 30, 10),
                     child: PieChart(
                       dataMap: pieChartData,
                       animationDuration: Duration(milliseconds: 800),
