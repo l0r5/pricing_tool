@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
-import 'package:pricing_tool/Themes/color_themes.dart';
+import 'package:pricing_tool/services/rest_service.dart';
+import 'package:pricing_tool/themes/color_themes.dart';
 import 'package:pricing_tool/elements/formatted_card.dart';
 import 'package:pricing_tool/elements/parameter_input_field.dart';
 import 'package:pricing_tool/elements/parameter_slider.dart';
-import 'package:pricing_tool/views/premium-payout-ratio.view.dart';
+import 'package:pricing_tool/views/premium-payout-ratio_view.dart';
 import 'package:pricing_tool/views/total_numbers_circle_view.dart';
 
 void main() => runApp(MyApp());
@@ -61,8 +62,8 @@ class _MyHomePageState extends State<MyHomePage> {
       "name": "Ticket Price",
       "value": 0.00,
       "min": 0,
-      "max": 100,
-      "divisions": 10000
+      "max": 60,
+      "divisions": 60
     },
     MyHomePage.PARAM_ID_PREMIUM_SHARE: {
       "id": 1,
@@ -70,15 +71,15 @@ class _MyHomePageState extends State<MyHomePage> {
       "value": 0,
       "min": 0,
       "max": 100,
-      "divisions": 10000
+      "divisions": 10
     },
     MyHomePage.PARAM_ID_PREMIUM_PRICE: {
       "id": 2,
       "name": "Premium Price",
       "value": 0.00,
       "min": 0,
-      "max": 100,
-      "divisions": 10000
+      "max": 60,
+      "divisions": 60
     },
     MyHomePage.PARAM_ID_PREMIUM_NUMBER: {
       "id": 3,
@@ -93,8 +94,8 @@ class _MyHomePageState extends State<MyHomePage> {
       "name": "Delay",
       "value": 0,
       "min": 0,
-      "max": 120,
-      "divisions": 120
+      "max": 10,
+      "divisions": 10
     },
     MyHomePage.PARAM_ID_PAYOUT_SHARE: {
       "id": 5,
@@ -102,15 +103,15 @@ class _MyHomePageState extends State<MyHomePage> {
       "value": 0,
       "min": 0,
       "max": 100,
-      "divisions": 10000
+      "divisions": 10
     },
     MyHomePage.PARAM_ID_PAYOUT_AMOUNT: {
       "id": 6,
       "name": "Payout Amount",
       "value": 0.00,
       "min": 0,
-      "max": 200,
-      "divisions": 20000
+      "max": 60,
+      "divisions": 60
     },
     MyHomePage.PARAM_ID_PAYOUT_NUMBER: {
       "id": 7,
@@ -128,6 +129,21 @@ class _MyHomePageState extends State<MyHomePage> {
   double totalPayoutRatio = 0.00;
   double revenue = 0.00;
 
+  Map _historicalDelayData;
+
+  @override
+  void initState() {
+    super.initState();
+    refreshDataFromServer();
+  }
+
+  void refreshDataFromServer() async {
+    Map response = await RestService().getTotalCountedDelays();
+    setState(() {
+      _historicalDelayData = response;
+    });
+  }
+
   void updateValue(int paramId, double value) {
     if (_params[paramId]["value"] != value) {
       setState(() {
@@ -142,8 +158,10 @@ class _MyHomePageState extends State<MyHomePage> {
     var ticketPrice = _params[MyHomePage.PARAM_ID_TICKET_PRICE]["value"];
     var premiumPrice = _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]["value"];
     var premiumShare = _params[MyHomePage.PARAM_ID_PREMIUM_SHARE]["value"];
+    var premiumNumber = _params[MyHomePage.PARAM_ID_PREMIUM_NUMBER]["value"];
     var payoutAmount = _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]["value"];
     var payoutShare = _params[MyHomePage.PARAM_ID_PAYOUT_SHARE]["value"];
+    var delay = _params[MyHomePage.PARAM_ID_DELAY]["value"];
 
     switch (paramId) {
       case MyHomePage.PARAM_ID_TICKET_PRICE:
@@ -171,6 +189,10 @@ class _MyHomePageState extends State<MyHomePage> {
       case MyHomePage.PARAM_ID_DELAY:
         _params[MyHomePage.PARAM_ID_DELAY]["value"] =
             _params[MyHomePage.PARAM_ID_DELAY]["value"].round();
+        if(_historicalDelayData != null) {
+           var payoutProbability = _historicalDelayData["payout-probabilities"][delay.toString()];
+           _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"] = (premiumNumber * payoutProbability).round();
+        }
         break;
       case MyHomePage.PARAM_ID_PAYOUT_SHARE:
         if (ticketPrice > 0 && payoutShare > 0) {
