@@ -27,7 +27,7 @@ class TotalNumbersCircleView extends StatelessWidget {
           dataMap: pieChartData,
           animationDuration: Duration(milliseconds: 800),
           chartLegendSpacing: 20.0,
-          chartRadius: MediaQuery.of(context).size.width / 10,
+          chartRadius: MediaQuery.of(context).size.width / 12,
           showChartValuesInPercentage: true,
           showChartValues: true,
           showChartValuesOutside: false,
@@ -41,7 +41,7 @@ class TotalNumbersCircleView extends StatelessWidget {
           initialAngle: 0,
           chartValueStyle: defaultChartValueStyle.copyWith(
               color: Colors.blueGrey[900].withOpacity(0.9), fontSize: 11),
-          chartType: ChartType.disc,
+          chartType: ChartType.ring,
         ),
         Container(
           margin: EdgeInsets.fromLTRB(0, 20, 0, 10),

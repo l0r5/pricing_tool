@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
-import 'package:pricing_tool/Themes/color_themes.dart';
+import 'package:pricing_tool/themes/color_themes.dart';
 
 class PremiumPayoutRatioView extends StatelessWidget {
   final List<String> labels;
@@ -135,7 +135,7 @@ class PremiumPayoutRatioView extends StatelessWidget {
                       chartValueStyle: defaultChartValueStyle.copyWith(
                           color: Colors.blueGrey[900].withOpacity(0.9),
                           fontSize: 11),
-                      chartType: ChartType.disc,
+                      chartType: ChartType.ring,
                     ),
                   ),
                 ]),
