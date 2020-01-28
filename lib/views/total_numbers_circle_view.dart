@@ -19,49 +19,53 @@ class TotalNumbersCircleView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 300,
       width: 200,
-      child:
-          Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
-        PieChart(
-          dataMap: pieChartData,
-          animationDuration: Duration(milliseconds: 800),
-          chartLegendSpacing: 20.0,
-          chartRadius: MediaQuery.of(context).size.width / 12,
-          showChartValuesInPercentage: true,
-          showChartValues: true,
-          showChartValuesOutside: false,
-          chartValueBackgroundColor: Colors.white,
-          showLegends: true,
-          legendStyle: TextStyle(fontSize: 11),
-          legendPosition: LegendPosition.bottom,
-          decimalPlaces: 1,
-          colorList: colorSet,
-          showChartValueLabel: true,
-          initialAngle: 0,
-          chartValueStyle: defaultChartValueStyle.copyWith(
-              color: Colors.blueGrey[900].withOpacity(0.9), fontSize: 11),
-          chartType: ChartType.ring,
-        ),
-        Container(
-          margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
-          child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  "${totalParameterAmount.toStringAsFixed(2)} CHF",
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: colorSet[0],
-                      fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "${labels[0]}",
-                  style: TextStyle(color: colorSet[0]),
-                ),
-              ]),
-        )
-      ]),
+      height: 300,
+      child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 20, 0, 5),
+              child: PieChart(
+                dataMap: pieChartData,
+                animationDuration: Duration(milliseconds: 800),
+                chartLegendSpacing: 20.0,
+                chartRadius: MediaQuery.of(context).size.width / 12,
+                showChartValuesInPercentage: true,
+                showChartValues: true,
+                showChartValuesOutside: false,
+                chartValueBackgroundColor: Colors.white,
+                showLegends: true,
+                legendStyle: TextStyle(fontSize: 11),
+                legendPosition: LegendPosition.bottom,
+                decimalPlaces: 1,
+                colorList: colorSet,
+                showChartValueLabel: true,
+                initialAngle: 0,
+                chartValueStyle: defaultChartValueStyle.copyWith(
+                    color: Colors.blueGrey[900].withOpacity(0.9), fontSize: 11),
+                chartType: ChartType.ring,
+              ),
+            ),
+            Container(
+              margin: EdgeInsets.fromLTRB(0, 20, 0, 10),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      "${totalParameterAmount.toStringAsFixed(2)} CHF",
+                      style: TextStyle(
+                          fontSize: 20,
+                          color: colorSet[0],
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      "${labels[0]}",
+                      style: TextStyle(color: colorSet[0]),
+                    ),
+                  ]),
+            )
+          ]),
     );
   }
 }

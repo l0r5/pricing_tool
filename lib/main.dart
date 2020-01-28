@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:logger/logger.dart';
+import 'package:pricing_tool/views/parameter_bar_view.dart';
 import 'package:pricing_tool/services/rest_service.dart';
 import 'package:pricing_tool/themes/color_themes.dart';
 import 'package:pricing_tool/elements/formatted_card.dart';
@@ -128,8 +129,9 @@ class _MyHomePageState extends State<MyHomePage> {
   double totalPayoutAmount = 0.00;
   double totalPayoutRatio = 0.00;
   double revenue = 0.00;
-
   Map _historicalDelayData;
+
+  double parameterBarWidth = 400;
 
   @override
   void initState() {
@@ -189,9 +191,11 @@ class _MyHomePageState extends State<MyHomePage> {
       case MyHomePage.PARAM_ID_DELAY:
         _params[MyHomePage.PARAM_ID_DELAY]["value"] =
             _params[MyHomePage.PARAM_ID_DELAY]["value"].round();
-        if(_historicalDelayData != null) {
-           var payoutProbability = _historicalDelayData["payout-probabilities"][delay.toString()];
-           _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"] = (premiumNumber * payoutProbability).round();
+        if (_historicalDelayData != null) {
+          var payoutProbability =
+              _historicalDelayData["payout-probabilities"][delay.toString()];
+          _params[MyHomePage.PARAM_ID_PAYOUT_NUMBER]["value"] =
+              (premiumNumber * payoutProbability).round();
         }
         break;
       case MyHomePage.PARAM_ID_PAYOUT_SHARE:
@@ -258,157 +262,157 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   Widget _buildParamWidget(int paramId) {
-    return Row(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        ParameterInputField(
-          paramId: _params[paramId]["id"],
-          label: _params[paramId]["name"],
-          value: _params[paramId]["value"],
-          updateValue: updateValue,
-        ),
-        ParameterSlider(
-          paramId: _params[paramId]["id"],
-          label: _params[paramId]["name"],
-          value: _params[paramId]["value"],
-          min: _params[paramId]["min"],
-          max: _params[paramId]["max"],
-          divisions: _params[paramId]["divisions"],
-          updateValue: updateValue,
-        )
-      ],
-    );
+    return Container(
+        margin: EdgeInsets.all(5),
+        padding: EdgeInsets.all(15),
+        color: ColorThemes.accentColor10,
+        child: Column(
+          children: <Widget>[
+            ParameterInputField(
+              paramId: _params[paramId]["id"],
+              label: _params[paramId]["name"],
+              value: _params[paramId]["value"],
+              updateValue: updateValue,
+            ),
+            ParameterSlider(
+              paramId: _params[paramId]["id"],
+              label: _params[paramId]["name"],
+              value: _params[paramId]["value"],
+              min: _params[paramId]["min"],
+              max: _params[paramId]["max"],
+              divisions: _params[paramId]["divisions"],
+              updateValue: updateValue,
+            )
+          ],
+        ));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
+//      appBar: AppBar(
+//        title: Text(widget.title),
+//      ),
+        body: Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        ParameterBarView(
+          paramWidgets: _constructParamWidgets(0, _params.length - 1),
+          width: parameterBarWidth,
         ),
-        body: Container(
-            color: ColorThemes.backgroundColor,
-            child: ListView(
-                shrinkWrap: true,
-                padding: EdgeInsets.all(15.0),
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        margin:
-                            EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            Container(
-                              child: FormattedCard(
-                                child: TotalNumbersCircleView(
-                                  labels: [
-                                    "Total Premium Amount",
-                                  ],
-                                  totalParameterAmount: totalPremiumAmount,
-                                  pieChartData: {
-                                    (_params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
-                                        ["name"]): _params[
-                                            MyHomePage.PARAM_ID_PREMIUM_PRICE]
-                                        ["value"],
-                                    _params[MyHomePage.PARAM_ID_TICKET_PRICE]
-                                        ["name"]: (_params[MyHomePage
-                                                        .PARAM_ID_TICKET_PRICE]
-                                                    ["value"] <=
-                                                0 ||
-                                            _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
-                                                    ["value"] <=
-                                                0)
-                                        ? 1
-                                        : _params[MyHomePage.PARAM_ID_TICKET_PRICE]
-                                                ["value"] -
-                                            _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
-                                                ["value"]
-                                  },
-                                  colorSet: [
-                                    ColorThemes.accentColor2,
-                                    ColorThemes.accentColor4
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: FormattedCard(
-                                child: TotalNumbersCircleView(
-                                  labels: [
-                                    "Total Payout Amount",
-                                  ],
-                                  totalParameterAmount: totalPayoutAmount,
-                                  pieChartData: {
-                                    (_params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]
-                                        ["name"]): _params[
-                                            MyHomePage.PARAM_ID_PAYOUT_AMOUNT]
-                                        ["value"],
-                                    _params[MyHomePage.PARAM_ID_TICKET_PRICE]
-                                        ["name"]: (_params[MyHomePage
-                                                        .PARAM_ID_TICKET_PRICE]
-                                                    ["value"] <=
-                                                0 ||
-                                            _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]
-                                                    ["value"] <=
-                                                0)
-                                        ? 1
-                                        : _params[MyHomePage.PARAM_ID_TICKET_PRICE]
-                                                ["value"] -
-                                            _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]
-                                                ["value"]
-                                  },
-                                  colorSet: [
-                                    ColorThemes.accentColor5,
-                                    ColorThemes.accentColor4,
-                                  ],
-                                ),
-                              ),
-                            ),
-                            Container(
-                              child: FormattedCard(
-                                child: PremiumPayoutRatioView(labels: [
-                                  "Premium Ratio",
-                                  "${(totalPremiumRatio * 100) > 0 ? ((totalPremiumRatio * 100) <= 100 ? (totalPremiumRatio * 100).round() : 100) : 0}",
-                                  "Payout Ratio",
-                                  "${(totalPayoutRatio * 100) > 0 ? ((totalPayoutRatio * 100) <= 100 ? (totalPayoutRatio * 100).round() : 100) : 0}"
-                                ], pieChartData: {
-                                  "Premiums": totalPremiumRatio > 0
-                                      ? (totalPremiumRatio * 100).round()
-                                      : 1,
-                                  "Payouts": totalPayoutRatio > 0
-                                      ? (totalPayoutRatio * 100).round()
-                                      : 1
-                                }, colorSet: [
-                                  ColorThemes.accentColor2,
-                                  ColorThemes.accentColor5,
-                                  ColorThemes.primaryColor
-                                ], revenue: revenue),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Container(
-                          height: 300,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 50, vertical: 10),
+        Container(
+          color: ColorThemes.backgroundColor,
+          width: MediaQuery.of(context).size.width - parameterBarWidth,
+          height: MediaQuery.of(context).size.height,
+          child: ListView(
+              shrinkWrap: true,
+              padding: EdgeInsets.all(15.0),
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: <Widget>[
+                        Container(
                           child: FormattedCard(
-                              child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: _constructParamWidgets(0, 3)),
-                              Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: _constructParamWidgets(4, 7)),
-                            ],
-                          )))
-                    ],
-                  )
-                ])));
+                            child: PremiumPayoutRatioView(labels: [
+                              "Premium Ratio",
+                              "${(totalPremiumRatio * 100) > 0 ? ((totalPremiumRatio * 100) <= 100 ? (totalPremiumRatio * 100).round() : 100) : 0}",
+                              "Payout Ratio",
+                              "${(totalPayoutRatio * 100) > 0 ? ((totalPayoutRatio * 100) <= 100 ? (totalPayoutRatio * 100).round() : 100) : 0}"
+                            ], pieChartData: {
+                              "Premiums": totalPremiumRatio > 0
+                                  ? (totalPremiumRatio * 100).round()
+                                  : 1,
+                              "Payouts": totalPayoutRatio > 0
+                                  ? (totalPayoutRatio * 100).round()
+                                  : 1
+                            }, colorSet: [
+                              ColorThemes.accentColor2,
+                              ColorThemes.accentColor5,
+                              ColorThemes.primaryColor
+                            ], revenue: revenue),
+                          ),
+                        )
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Container(
+                          child: FormattedCard(
+                            child: TotalNumbersCircleView(
+                              labels: [
+                                "Total Premium Amount",
+                              ],
+                              totalParameterAmount: totalPremiumAmount,
+                              pieChartData: {
+                                (_params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
+                                        ["name"]):
+                                    _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
+                                        ["value"],
+                                _params[MyHomePage.PARAM_ID_TICKET_PRICE]
+                                    ["name"]: (_params[MyHomePage
+                                                    .PARAM_ID_TICKET_PRICE]
+                                                ["value"] <=
+                                            0 ||
+                                        _params[MyHomePage.PARAM_ID_PREMIUM_PRICE]
+                                                ["value"] <=
+                                            0)
+                                    ? 1
+                                    : _params[MyHomePage.PARAM_ID_TICKET_PRICE]
+                                            ["value"] -
+                                        _params[MyHomePage
+                                            .PARAM_ID_PREMIUM_PRICE]["value"]
+                              },
+                              colorSet: [
+                                ColorThemes.accentColor2,
+                                ColorThemes.accentColor4
+                              ],
+                            ),
+                          ),
+                        ),
+                        Container(
+                          child: FormattedCard(
+                            child: TotalNumbersCircleView(
+                              labels: [
+                                "Total Payout Amount",
+                              ],
+                              totalParameterAmount: totalPayoutAmount,
+                              pieChartData: {
+                                (_params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]
+                                        ["name"]):
+                                    _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]
+                                        ["value"],
+                                _params[MyHomePage.PARAM_ID_TICKET_PRICE]
+                                    ["name"]: (_params[MyHomePage
+                                                    .PARAM_ID_TICKET_PRICE]
+                                                ["value"] <=
+                                            0 ||
+                                        _params[MyHomePage.PARAM_ID_PAYOUT_AMOUNT]
+                                                ["value"] <=
+                                            0)
+                                    ? 1
+                                    : _params[MyHomePage.PARAM_ID_TICKET_PRICE]
+                                            ["value"] -
+                                        _params[MyHomePage
+                                            .PARAM_ID_PAYOUT_AMOUNT]["value"]
+                              },
+                              colorSet: [
+                                ColorThemes.accentColor5,
+                                ColorThemes.accentColor4,
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              ]),
+        )
+      ],
+    ));
   }
 }

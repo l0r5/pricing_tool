@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pricing_tool/themes/color_themes.dart';
 
 class ParameterInputField extends StatelessWidget {
   ParameterInputField({label, paramId, value, updateValue, focus}) {
@@ -34,7 +35,15 @@ class ParameterInputField extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: 20),
       child: TextField(
           controller: _textFieldController,
-          decoration: InputDecoration(labelText: label, labelStyle: TextStyle(color: Theme.of(context).accentColor)),
+          style: TextStyle(color: Colors.white),
+          decoration: InputDecoration(
+            labelText: label,
+            labelStyle: TextStyle(color: ColorThemes.accentColor9),
+            hintStyle: TextStyle(color: Colors.white),
+            enabledBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: Colors.white),
+            ),
+          ),
           keyboardType: TextInputType.numberWithOptions(decimal: true),
           onSubmitted: (newValue) => _updateField(newValue),
           onTap: (_textFieldController.text == "0") ? _resetField : null),

@@ -41,7 +41,7 @@ class ParameterSlider extends StatelessWidget {
         Text(
           "$min",
           style: TextStyle(
-            color: Colors.grey,
+            color: Colors.white,
             fontSize: 10,
           ),
         ),
@@ -49,7 +49,8 @@ class ParameterSlider extends StatelessWidget {
           width: 200,
           child: Slider(
             label: "$label: $value",
-            activeColor: ColorThemes.accentColor,
+            activeColor: ColorThemes.accentColor9,
+            inactiveColor: ColorThemes.accentColor6,
             min: min,
             max: max,
             divisions: divisions,
@@ -59,7 +60,7 @@ class ParameterSlider extends StatelessWidget {
         ),
         Text((max < 10000) ? "$max" : (max < 1000000) ? "${max/1000} k" : "${max/1000000} mio",
             style: TextStyle(
-              color: Colors.grey,
+              color: Colors.white,
               fontSize: 10,
             ))
       ],
