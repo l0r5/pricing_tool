@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:pricing_tool/themes/color_themes.dart';
 
 class TotalNumbersCircleView extends StatelessWidget {
   final List<String> labels;
@@ -34,16 +35,16 @@ class TotalNumbersCircleView extends StatelessWidget {
                 showChartValuesInPercentage: true,
                 showChartValues: true,
                 showChartValuesOutside: false,
-                chartValueBackgroundColor: Colors.white,
+                chartValueBackgroundColor: ColorThemes.accentColor12,
                 showLegends: true,
-                legendStyle: TextStyle(fontSize: 11),
+                legendStyle: TextStyle(fontSize: 11, color: Colors.white),
                 legendPosition: LegendPosition.bottom,
                 decimalPlaces: 1,
                 colorList: colorSet,
                 showChartValueLabel: true,
                 initialAngle: 0,
                 chartValueStyle: defaultChartValueStyle.copyWith(
-                    color: Colors.blueGrey[900].withOpacity(0.9), fontSize: 11),
+                    color: Colors.white, fontSize: 11),
                 chartType: ChartType.ring,
               ),
             ),

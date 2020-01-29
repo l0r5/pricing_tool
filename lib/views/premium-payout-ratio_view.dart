@@ -35,7 +35,7 @@ class PremiumPayoutRatioView extends StatelessWidget {
                             ? ColorThemes.accentColor9
                             : (revenue > 0)
                                 ? ColorThemes.accentColor4
-                                : Colors.black,
+                                : Colors.white,
                         fontSize: 30,
                         fontWeight: FontWeight.bold),
                   ),
@@ -46,7 +46,7 @@ class PremiumPayoutRatioView extends StatelessWidget {
                             ? ColorThemes.accentColor9
                             : (revenue > 0)
                                 ? ColorThemes.accentColor4
-                                : Colors.black,
+                                : Colors.white,
                         fontSize: 30,
                         fontWeight: FontWeight.bold),
                   )
@@ -125,7 +125,7 @@ class PremiumPayoutRatioView extends StatelessWidget {
                       showChartValuesInPercentage: true,
                       showChartValues: true,
                       showChartValuesOutside: false,
-                      chartValueBackgroundColor: Colors.white,
+                      chartValueBackgroundColor: ColorThemes.accentColor12,
                       showLegends: false,
                       legendStyle: TextStyle(fontSize: 11),
                       legendPosition: LegendPosition.bottom,
@@ -134,7 +134,7 @@ class PremiumPayoutRatioView extends StatelessWidget {
                       showChartValueLabel: true,
                       initialAngle: 0,
                       chartValueStyle: defaultChartValueStyle.copyWith(
-                          color: Colors.blueGrey[900].withOpacity(0.9),
+                          color: Colors.white,
                           fontSize: 11),
                       chartType: ChartType.ring,
                     ),

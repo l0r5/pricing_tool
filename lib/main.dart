@@ -315,7 +315,7 @@ class _MyHomePageState extends State<MyHomePage> {
           width: parameterBarWidth,
         ),
         Container(
-          color: ColorThemes.backgroundColor,
+          color: ColorThemes.accentColor11,
           width: MediaQuery.of(context).size.width - parameterBarWidth,
           height: MediaQuery.of(context).size.height,
           child: ListView(

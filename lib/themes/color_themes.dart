@@ -13,6 +13,10 @@ class ColorThemes {
   static const  accentColor8 = const Color(0xffA6DBD3);
   static const  accentColor9 = const Color(0xffC5445C);
   static const  accentColor10 = const Color(0xff3B3D48);
+  static const  accentColor11 = const Color(0xff343641);
+  static const  accentColor12 = const Color(0xff535563);
+
+
 
 
   static const backgroundColor = const Color(0xffF2F3F7);
