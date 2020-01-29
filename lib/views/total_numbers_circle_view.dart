@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:pricing_tool/themes/color_themes.dart';
 
@@ -16,6 +17,8 @@ class TotalNumbersCircleView extends StatelessWidget {
       this.colorSet}) {
 //    _pieChartData = {"${labels[0]}": parameterAmount, "Ticket Price": ticketPrice};
   }
+
+  final currencyFormat = NumberFormat("#,###0.00", "en_US");
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,7 @@ class TotalNumbersCircleView extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      "${totalParameterAmount.toStringAsFixed(2)} CHF",
+                      "${currencyFormat.format(totalParameterAmount)} CHF",
                       style: TextStyle(
                           fontSize: 20,
                           color: colorSet[0],

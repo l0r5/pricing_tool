@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:intl/intl.dart';
 import 'package:pricing_tool/themes/color_themes.dart';
 
 class PremiumPayoutRatioView extends StatelessWidget {
@@ -8,6 +9,8 @@ class PremiumPayoutRatioView extends StatelessWidget {
   final Map<String, double> pieChartData;
   final List<Color> colorSet;
   final double revenue;
+
+  final currencyFormat = NumberFormat("#,###0.00", "en_US");
 
   PremiumPayoutRatioView(
       {this.labels, this.pieChartData, this.colorSet, this.revenue});
@@ -29,7 +32,7 @@ class PremiumPayoutRatioView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Text(
-                    "${revenue.toStringAsFixed(2)} CHF",
+                    "${currencyFormat.format(revenue)} CHF",
                     style: TextStyle(
                         color: (revenue < 0)
                             ? ColorThemes.accentColor9
